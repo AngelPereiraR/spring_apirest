@@ -23,6 +23,11 @@ class AppRoutes {
         name: 'Loading Screen',
         screen: const LoadingScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'productscreen',
+        name: 'Loading Screen',
+        screen: const ProductScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

@@ -166,7 +166,7 @@ class _LoginForm extends StatelessWidget {
                     if (errorMessage == 'ROLE_ADMIN') {
                       Navigator.pushNamed(context, 'index2');
                     } else if (errorMessage == 'ROLE_USER') {
-                      Navigator.pushNamed(context, 'userCompany');
+                      Navigator.pushNamed(context, 'productscreen');
                     } else {
                       CoolAlert.show(
                         context: context,
