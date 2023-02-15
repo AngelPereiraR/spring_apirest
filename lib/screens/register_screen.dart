@@ -152,37 +152,6 @@ class _RegisterForm extends StatelessWidget {
               },
             ),
             const SizedBox(height: 10),
-            TextFormField(
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                hintText: 'Your role',
-                labelText: 'Role',
-                hintStyle: TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
-                labelStyle: TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-                prefixIcon: Icon(Icons.alternate_email_rounded,
-                    color: Color.fromARGB(255, 18, 201, 159)),
-                enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Color.fromARGB(255, 18, 201, 159))),
-                border: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Color.fromARGB(255, 18, 201, 159))),
-                focusedBorder: OutlineInputBorder(
-                  borderSide:
-                      BorderSide(color: Color.fromARGB(255, 18, 201, 159)),
-                ),
-              ),
-              onChanged: (value) => registerForm.role = value,
-              validator: (value) {
-                return (value == "ROLE_USER")
-                    ? null
-                    : 'Please, enter a valid role';
-              },
-            ),
-            const SizedBox(height: 10),
             SizedBox(
               width: 300,
               child: ElevatedButton(
@@ -201,7 +170,7 @@ class _RegisterForm extends StatelessWidget {
                         await registerService.postRegister(
                             registerForm.username,
                             registerForm.password,
-                            registerForm.role);
+                            "ROLE_USER");
 
                     if (errorMessage == "") {
                       RegisterServices().logout();

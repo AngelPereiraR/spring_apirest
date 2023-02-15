@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -35,7 +34,7 @@ class RegisterServices extends ChangeNotifier {
     } else {
       String? error = '';
 
-      error = 'Error to register. The password is already taken';
+      error = 'Error to register. The username is already taken';
 
       resp = error;
     }

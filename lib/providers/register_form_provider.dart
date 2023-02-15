@@ -7,7 +7,6 @@ class RegisterFormProvider extends ChangeNotifier {
 
   String username = '';
   String password = '';
-  String role = '';
 
   bool isValidForm() {
     return formKey.currentState?.validate() ?? false;
