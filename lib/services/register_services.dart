@@ -2,23 +2,20 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:requests/requests.dart';
 
 class RegisterServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.136.68:8080';
+  final String _baseUrl = '192.168.151.68:8080';
 
   final storage = const FlutterSecureStorage();
 
   RegisterServices();
 
   postRegister(String username, String password, String role) async {
-    final url = Uri.http(_baseUrl, '/register');
-    final response = await http.post(url, body: {
-      'username': username,
-      'password': password,
-      'role': role,
-    });
+    var response = await Requests.post("http://$_baseUrl/register",
+        body: {'username': username, 'password': password, 'role': role},
+        bodyEncoding: RequestBodyEncoding.JSON);
 
     String resp = '';
     final Map<String, dynamic> register = json.decode(response.body);

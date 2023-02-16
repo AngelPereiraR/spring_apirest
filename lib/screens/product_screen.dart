@@ -268,8 +268,8 @@ class _listProductsState extends State<listProducts1> {
                               child: const ClipRRect(
                                 child: FadeInImage(
                                   placeholder:
-                                      AssetImage('assets/no-image.jpg'),
-                                  image: AssetImage('assets/no-image.jpg'),
+                                      AssetImage('assets/no-image.png'),
+                                  image: AssetImage('assets/no-image.png'),
                                   width: 300,
                                   height: 200,
                                   fit: BoxFit.cover,
