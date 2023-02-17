@@ -18,8 +18,6 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
         "http://$_baseUrl/api/user/categories/$id",
         headers: {'Authorization': 'Bearer $token'});
 
-    bool categoryFinished = false;
-
     int idCategory = 0;
     String nameCategory = "";
     String descriptionCategory = "";
@@ -41,7 +39,6 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
           nameCategory = value;
         } else if (key == "description") {
           descriptionCategory = value;
-          categoryFinished = true;
         } else if (key == "categoryId") {
           value.forEach((key, value) {
             if (key == "id") {
@@ -63,9 +60,9 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
             }
           });
           CategoryAndProducts categoryAndProducts = CategoryAndProducts(
-              id: id,
-              name: name,
-              description: description,
+              id: idCategory,
+              name: nameCategory,
+              description: descriptionCategory,
               category: categoryList);
 
           resp = categoryAndProducts;
