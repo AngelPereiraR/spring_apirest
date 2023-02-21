@@ -19,6 +19,18 @@ class AppState extends StatelessWidget {
     return MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => LoginServices()),
       ChangeNotifierProvider(create: (_) => RegisterServices()),
+      ChangeNotifierProvider(
+          create: (_) => DeleteCategoryAndProductsServices()),
+      ChangeNotifierProvider(create: (_) => DeleteProductServices()),
+      ChangeNotifierProvider(create: (_) => DeleteProductsOfCategoryServices()),
+      ChangeNotifierProvider(create: (_) => GetCategoryAndProductsServices()),
+      ChangeNotifierProvider(create: (_) => GetFavoritesServices()),
+      ChangeNotifierProvider(create: (_) => GetProductServices()),
+      ChangeNotifierProvider(create: (_) => GetProductsServices()),
+      ChangeNotifierProvider(create: (_) => InsertCategoryServices()),
+      ChangeNotifierProvider(create: (_) => InsertProductServices()),
+      ChangeNotifierProvider(create: (_) => UpdateCategoryServices()),
+      ChangeNotifierProvider(create: (_) => UpdateProductServices()),
     ], child: const MyApp());
   }
 }

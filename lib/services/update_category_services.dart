@@ -8,7 +8,7 @@ import 'package:spring_apirest/services/services.dart';
 
 class UpdateCategoryServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.151.68:8080';
+  final String _baseUrl = '192.168.247.68:8080';
 
   UpdateCategoryServices();
 
