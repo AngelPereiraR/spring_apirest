@@ -164,7 +164,7 @@ class _LoginForm extends StatelessWidget {
                     final String? errorMessage = await loginService.postLogin(
                         loginForm.username, loginForm.password);
                     if (errorMessage == 'ROLE_ADMIN') {
-                      Navigator.pushNamed(context, 'index2');
+                      Navigator.pushNamed(context, 'adminCategories');
                     } else if (errorMessage == 'ROLE_USER') {
                       Navigator.pushNamed(context, 'productscreen');
                     } else {

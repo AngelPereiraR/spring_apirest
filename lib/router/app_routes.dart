@@ -28,6 +28,16 @@ class AppRoutes {
         name: 'Loading Screen',
         screen: const ProductScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminCategories',
+        name: 'Admin Categories Screen',
+        screen: const AdminCategoriesScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminProducts',
+        name: 'Admin Products Screen',
+        screen: const AdminProductsScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {

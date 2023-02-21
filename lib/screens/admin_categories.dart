@@ -10,23 +10,23 @@ import '../screens/screens.dart';
 import '../services/services.dart';
 import '../widgets/widgets.dart';
 
-class AdminProductsScreen extends StatefulWidget {
-  const AdminProductsScreen({
+class AdminCategoriesScreen extends StatefulWidget {
+  const AdminCategoriesScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<AdminProductsScreen> createState() => _AdminProductsScreenState();
+  State<AdminCategoriesScreen> createState() => _AdminCategoriesScreenState();
 }
 
-class _AdminProductsScreenState extends State<AdminProductsScreen> {
-  List<Product> products = [];
-  final productsService = GetProductsServices();
+class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
+  List<CategoryAndProducts> categories = [];
+  final categoriesService = GetCategoriesServices();
   Future refresh() async {
-    setState(() => products.clear());
-    await productsService.getProducts();
+    setState(() => categories.clear());
+    await categoriesService.getCategories();
     setState(() {
-      products = productsService.products;
+      categories = categoriesService.categories;
     });
   }
 
@@ -38,18 +38,18 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (productsService.isLoading) return const LoadingScreen();
+    if (categoriesService.isLoading) return const LoadingScreen();
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            const Text('Products or =>'),
+            const Text('Categories or =>'),
             TextButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, 'adminCategories');
+                  Navigator.pushReplacementNamed(context, 'adminProducts');
                 },
                 child: const Text(
-                  "Change to: Categories",
+                  "Change to: Products",
                   style: TextStyle(color: Colors.white, fontSize: 20),
                 )),
           ],
@@ -62,28 +62,28 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
       body: RefreshIndicator(
           onRefresh: () async {
             refresh();
-            Navigator.pushReplacementNamed(context, 'adminProducts');
+            Navigator.pushReplacementNamed(context, 'adminCategories');
           },
           child: ListView.builder(
             itemBuilder: (context, index) {
               return Column(
                 children: [
                   MySlidable(
-                    id: products[index].id,
+                    id: categories[index].id,
                     index: index,
-                    tit: products[index].name,
-                    desc: products[index].description,
+                    tit: categories[index].name,
+                    desc: categories[index].description,
                   ),
                   TextButton(
                       onPressed: () => Navigator.pushReplacementNamed(
-                          context, 'insertProduct'),
+                          context, 'insertCategory'),
                       style: ButtonStyle(
                           overlayColor: MaterialStateProperty.all(
                               Colors.indigo.withOpacity(0.1)),
                           shape:
                               MaterialStateProperty.all(const StadiumBorder())),
                       child: const Text(
-                        'Create new product',
+                        'Create new category',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -93,18 +93,18 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                 ],
               );
             },
-            itemCount: products.length,
+            itemCount: categories.length,
           )),
     );
   }
 }
 
-class MySlidable2 extends StatelessWidget {
+class MySlidable extends StatelessWidget {
   final String tit;
   final String desc;
   final int id;
   final int index;
-  const MySlidable2({
+  const MySlidable({
     Key? key,
     required this.tit,
     required this.desc,
