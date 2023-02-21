@@ -78,8 +78,6 @@ class GetCategoriesServices extends ChangeNotifier {
 
             categories.add(categoryAndProducts);
           }
-
-          resp = categories;
         });
       } else {
         String? error = '';
@@ -88,10 +86,12 @@ class GetCategoriesServices extends ChangeNotifier {
 
         resp = error;
       }
-
-      isLoading = false;
-      notifyListeners();
-      return resp;
     }
+
+    resp = categories;
+
+    isLoading = false;
+    notifyListeners();
+    return resp;
   }
 }

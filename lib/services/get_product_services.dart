@@ -47,7 +47,6 @@ class GetProductServices extends ChangeNotifier {
               favorite: favorite,
               price: price);
         }
-        resp = product;
       });
     } else {
       String? error = '';
@@ -56,6 +55,9 @@ class GetProductServices extends ChangeNotifier {
 
       resp = error;
     }
+
+    resp = product;
+
     return resp;
   }
 }

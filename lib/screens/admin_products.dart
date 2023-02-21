@@ -48,10 +48,16 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, 'adminCategories');
                 },
-                child: const Text(
-                  "Change to: Categories",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                )),
+                child: const Icon(Icons.category, color: Colors.white)),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, 'insertProduct'),
+              style: ButtonStyle(
+                  overlayColor:
+                      MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
+                  shape: MaterialStateProperty.all(const StadiumBorder())),
+              child: const Icon(Icons.add_shopping_cart, color: Colors.white),
+            )
           ],
         ),
         elevation: 0,
@@ -66,31 +72,11 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
           },
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  MySlidable(
-                    id: products[index].id,
-                    index: index,
-                    tit: products[index].name,
-                    desc: products[index].description,
-                  ),
-                  TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(
-                          context, 'insertProduct'),
-                      style: ButtonStyle(
-                          overlayColor: MaterialStateProperty.all(
-                              Colors.indigo.withOpacity(0.1)),
-                          shape:
-                              MaterialStateProperty.all(const StadiumBorder())),
-                      child: const Text(
-                        'Create new product',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 18, 201, 159),
-                        ),
-                      ))
-                ],
+              return MySlidable(
+                id: products[index].id,
+                index: index,
+                tit: products[index].name,
+                desc: products[index].description,
               );
             },
             itemCount: products.length,

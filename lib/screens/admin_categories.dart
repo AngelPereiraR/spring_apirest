@@ -48,10 +48,18 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
                 onPressed: () {
                   Navigator.pushReplacementNamed(context, 'adminProducts');
                 },
-                child: const Text(
-                  "Change to: Products",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                child: const Icon(
+                  Icons.shopify,
+                  color: Colors.white,
                 )),
+            TextButton(
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, 'insertCategory'),
+                style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(
+                        Colors.indigo.withOpacity(0.1)),
+                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                child: const Icon(Icons.add, color: Colors.white)),
           ],
         ),
         elevation: 0,
@@ -66,31 +74,11 @@ class _AdminCategoriesScreenState extends State<AdminCategoriesScreen> {
           },
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  MySlidable(
-                    id: categories[index].id,
-                    index: index,
-                    tit: categories[index].name,
-                    desc: categories[index].description,
-                  ),
-                  TextButton(
-                      onPressed: () => Navigator.pushReplacementNamed(
-                          context, 'insertCategory'),
-                      style: ButtonStyle(
-                          overlayColor: MaterialStateProperty.all(
-                              Colors.indigo.withOpacity(0.1)),
-                          shape:
-                              MaterialStateProperty.all(const StadiumBorder())),
-                      child: const Text(
-                        'Create new category',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 18, 201, 159),
-                        ),
-                      ))
-                ],
+              return MySlidable(
+                id: categories[index].id,
+                index: index,
+                tit: categories[index].name,
+                desc: categories[index].description,
               );
             },
             itemCount: categories.length,

@@ -68,8 +68,6 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
               description: descriptionCategory,
               category: categoryList);
         }
-
-        resp = category;
       });
     } else {
       String? error = '';
@@ -78,6 +76,9 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
 
       resp = error;
     }
+
+    resp = category;
+
     return resp;
   }
 }

@@ -48,7 +48,6 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
               price: price));
         }
       });
-      resp = products;
     } else {
       String? error = '';
 
@@ -56,6 +55,9 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
 
       resp = error;
     }
+
+    resp = products;
+
     return resp;
   }
 }

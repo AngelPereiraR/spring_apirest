@@ -55,7 +55,6 @@ class GetProductsServices extends ChangeNotifier {
                 price: price));
           }
         });
-        resp = products;
       } else {
         String? error = '';
 
@@ -63,10 +62,12 @@ class GetProductsServices extends ChangeNotifier {
 
         resp = error;
       }
-
-      isLoading = false;
-      notifyListeners();
-      return resp;
     }
+
+    resp = products;
+
+    isLoading = false;
+    notifyListeners();
+    return resp;
   }
 }
