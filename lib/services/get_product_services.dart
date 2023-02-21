@@ -11,6 +11,8 @@ class GetProductServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
   final String _baseUrl = '192.168.247.68:8080';
 
+  Product? product;
+
   GetProductServices();
 
   getGetProduct(int id) async {
@@ -38,14 +40,14 @@ class GetProductServices extends ChangeNotifier {
           favorite = value;
         } else if (key == "price") {
           price = value;
-          Product product = Product(
+          product = Product(
               id: idProduct,
               name: name,
               description: description,
               favorite: favorite,
               price: price);
-          resp = product;
         }
+        resp = product;
       });
     } else {
       String? error = '';

@@ -7,18 +7,17 @@ import 'package:requests/requests.dart';
 import 'package:spring_apirest/services/services.dart';
 import 'package:spring_apirest/models/models.dart';
 
-class GetCategoryAndProductsServices extends ChangeNotifier {
+class GetCategoriesServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
   final String _baseUrl = '192.168.247.68:8080';
 
-  CategoryAndProducts? category;
+  List<CategoryAndProducts> categories = [];
 
-  GetCategoryAndProductsServices();
+  GetCategoriesServices();
 
-  getCategoryAndProducts(int id) async {
+  getCategories(int id) async {
     String? token = await LoginServices().readToken();
-    var response = await Requests.get(
-        "http://$_baseUrl/api/user/categories/$id",
+    var response = await Requests.get("http://$_baseUrl/api/categories",
         headers: {'Authorization': 'Bearer $token'});
 
     int idCategory = 0;
@@ -62,14 +61,16 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
                   price: price));
             }
           });
-          category = CategoryAndProducts(
+          CategoryAndProducts categoryAndProducts = CategoryAndProducts(
               id: idCategory,
               name: nameCategory,
               description: descriptionCategory,
               category: categoryList);
+
+          categories.add(categoryAndProducts);
         }
 
-        resp = category;
+        resp = categories;
       });
     } else {
       String? error = '';
