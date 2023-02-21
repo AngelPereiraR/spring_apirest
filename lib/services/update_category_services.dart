@@ -12,7 +12,7 @@ class UpdateCategoryServices extends ChangeNotifier {
 
   UpdateCategoryServices();
 
-  putUpdateCategory(int id, String name, String description) async {
+  putUpdateCategory(int? id, String name, String description) async {
     String? token = await LoginServices().readToken();
     var response = await Requests.put(
         "http://$_baseUrl/api/admin/categories/$id",

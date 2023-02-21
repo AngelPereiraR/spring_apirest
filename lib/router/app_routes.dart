@@ -44,6 +44,11 @@ class AppRoutes {
         name: 'Insert Category Screen',
         screen: const InsertCategoryScreen(),
         icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'updateCategory',
+        name: 'Update Category Screen',
+        screen: const UpdateCategoryScreen(),
+        icon: Icons.account_balance_outlined),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes() {
