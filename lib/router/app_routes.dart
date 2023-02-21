@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spring_apirest/screens/insert_category_screen.dart';
 
 import '../models/models.dart';
 
@@ -37,6 +38,11 @@ class AppRoutes {
         route: 'adminProducts',
         name: 'Admin Products Screen',
         screen: const AdminProductsScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'insertCategory',
+        name: 'Insert Category Screen',
+        screen: const InsertCategoryScreen(),
         icon: Icons.account_balance_outlined),
   ];
 

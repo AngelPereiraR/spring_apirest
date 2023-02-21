@@ -27,34 +27,36 @@ class GetFavoritesServices extends ChangeNotifier {
     double price = 0;
 
     var resp;
-    final List<dynamic> productsResponse = json.decode(response.body);
-    for (int i = 0; i < productsResponse.length; i++) {
-      if (productsResponse[i].containsKey("id")) {
-        productsResponse[i].forEach((key, value) {
-          if (key == "id") {
-            idProduct = value;
-          } else if (key == "name") {
-            name = value;
-          } else if (key == "description") {
-            description = value;
-          } else if (key == "favorite") {
-            favorite = value;
-          } else if (key == "price") {
-            price = value;
-            products.add(Product(
-                id: idProduct,
-                name: name,
-                description: description,
-                favorite: favorite,
-                price: price));
-          }
-        });
-      } else {
-        String? error = '';
+    if (response.body.isNotEmpty) {
+      final List<dynamic> productsResponse = json.decode(response.body);
+      for (int i = 0; i < productsResponse.length; i++) {
+        if (productsResponse[i].containsKey("id")) {
+          productsResponse[i].forEach((key, value) {
+            if (key == "id") {
+              idProduct = value;
+            } else if (key == "name") {
+              name = value;
+            } else if (key == "description") {
+              description = value;
+            } else if (key == "favorite") {
+              favorite = value;
+            } else if (key == "price") {
+              price = value;
+              products.add(Product(
+                  id: idProduct,
+                  name: name,
+                  description: description,
+                  favorite: favorite,
+                  price: price));
+            }
+          });
+        } else {
+          String? error = '';
 
-        error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
+          error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
 
-        resp = error;
+          resp = error;
+        }
       }
 
       resp = products;

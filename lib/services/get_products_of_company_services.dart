@@ -27,37 +27,39 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
     double price = 0;
 
     var resp;
-    final Map<String, dynamic> getProducts = json.decode(response.body);
-    if (getProducts.containsKey("id")) {
-      getProducts.forEach((key, value) {
-        if (key == "id") {
-          idProduct = value;
-        } else if (key == "name") {
-          name = value;
-        } else if (key == "description") {
-          description = value;
-        } else if (key == "favorite") {
-          favorite = value;
-        } else if (key == "price") {
-          price = value;
-          products.add(Product(
-              id: idProduct,
-              name: name,
-              description: description,
-              favorite: favorite,
-              price: price));
-        }
-      });
-    } else {
-      String? error = '';
+    if (response.body.isNotEmpty) {
+      final Map<String, dynamic> getProducts = json.decode(response.body);
+      if (getProducts.containsKey("id")) {
+        getProducts.forEach((key, value) {
+          if (key == "id") {
+            idProduct = value;
+          } else if (key == "name") {
+            name = value;
+          } else if (key == "description") {
+            description = value;
+          } else if (key == "favorite") {
+            favorite = value;
+          } else if (key == "price") {
+            price = value;
+            products.add(Product(
+                id: idProduct,
+                name: name,
+                description: description,
+                favorite: favorite,
+                price: price));
+          }
+        });
+      } else {
+        String? error = '';
 
-      error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
+        error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
 
-      resp = error;
+        resp = error;
+      }
+
+      resp = products;
+
+      return resp;
     }
-
-    resp = products;
-
-    return resp;
   }
 }

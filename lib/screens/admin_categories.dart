@@ -104,6 +104,8 @@ class MySlidable extends StatelessWidget {
   Widget build(BuildContext context) {
     final deleteCategoryService =
         Provider.of<DeleteCategoryAndProductsServices>(context);
+    final deleteProductsService =
+        Provider.of<DeleteProductsOfCategoryServices>(context);
     return Slidable(
 
         // Specify a key if the Slidable is dismissible.
@@ -143,7 +145,7 @@ class MySlidable extends StatelessWidget {
               backgroundColor: const Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              label: 'Delete',
+              label: 'Category',
             ),
             SlidableAction(
               onPressed: (BuildContext context) {
@@ -169,8 +171,36 @@ class MySlidable extends StatelessWidget {
                 },
                 backgroundColor: const Color(0xFF7BC043),
                 foregroundColor: Colors.white,
-                icon: Icons.check_outlined,
-                label: 'Insert Product',
+                icon: Icons.add_shopping_cart,
+                label: 'Product',
+              ),
+            ),
+            Visibility(
+              visible: true,
+              child: SlidableAction(
+                onPressed: (BuildContext _) async {
+                  await CoolAlert.show(
+                    context: context,
+                    type: CoolAlertType.warning,
+                    title: 'Are you sure?',
+                    text: "Are you sure you want to delete these products?",
+                    showCancelBtn: true,
+                    confirmBtnColor: Colors.red,
+                    confirmBtnText: 'Delete',
+                    onConfirmBtnTap: () {
+                      deleteProductsService.deleteDeleteProductsOfCategory(id);
+                      Navigator.pushReplacementNamed(
+                          context, 'adminCategories');
+                    },
+                    onCancelBtnTap: () {
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+                backgroundColor: const Color(0xFFFE4A49),
+                foregroundColor: Colors.white,
+                icon: Icons.delete,
+                label: 'Products',
               ),
             ),
           ],

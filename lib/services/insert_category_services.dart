@@ -17,7 +17,8 @@ class InsertCategoryServices extends ChangeNotifier {
     var response = await Requests.post(
         "http://$_baseUrl/api/admin/categories/$id",
         body: {'id': id, 'name': name, 'description': description},
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token'},
+        bodyEncoding: RequestBodyEncoding.JSON);
 
     var resp;
     final Map<String, dynamic> insertCategory = json.decode(response.body);

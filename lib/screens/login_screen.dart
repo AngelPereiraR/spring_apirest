@@ -103,7 +103,7 @@ class _LoginForm extends StatelessWidget {
                   labelText: 'Username',
                   labelStyle:
                       TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
-                  prefixIcon: Icon(Icons.alternate_email_rounded,
+                  prefixIcon: Icon(Icons.account_circle,
                       color: Color.fromARGB(255, 18, 201, 159)),
                   border: OutlineInputBorder(
                       borderSide:

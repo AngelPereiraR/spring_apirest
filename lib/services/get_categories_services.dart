@@ -38,57 +38,63 @@ class GetCategoriesServices extends ChangeNotifier {
     double price = 0;
 
     var resp;
-    final List<dynamic> categoriesResponse = json.decode(response.body);
-    for (int i = 0; i < categoriesResponse.length; i++) {
-      if (categoriesResponse[i].containsKey("id")) {
-        categoriesResponse[i].forEach((key, value) {
-          if (key == "id") {
-            idCategory = value;
-          } else if (key == "name") {
-            nameCategory = value;
-          } else if (key == "description") {
-            descriptionCategory = value;
-          } else if (key == "categoryId") {
-            for (int j = 0; j < value.length; j++) {
-              value[j].forEach((key, value) {
-                if (key == "id") {
-                  idProduct = value;
-                } else if (key == "name") {
-                  name = value;
-                } else if (key == "description") {
-                  description = value;
-                } else if (key == "favorite") {
-                  favorite = value;
-                } else if (key == "price") {
-                  price = value;
-                  categoryList.add(CategoryList(
-                      id: idProduct,
-                      name: name,
-                      description: description,
-                      favorite: favorite,
-                      price: price));
-                }
-              });
+    if (response.body.isNotEmpty) {
+      final List<dynamic> categoriesResponse = json.decode(response.body);
+      for (int i = 0; i < categoriesResponse.length; i++) {
+        if (categoriesResponse[i].containsKey("id")) {
+          categoriesResponse[i].forEach((key, value) {
+            if (key == "id") {
+              idCategory = value;
+            } else if (key == "name") {
+              nameCategory = value;
+            } else if (key == "description") {
+              descriptionCategory = value;
+            } else if (key == "categoryId") {
+              for (int j = 0; j < value.length; j++) {
+                value[j].forEach((key, value) {
+                  if (key == "id") {
+                    idProduct = value;
+                  } else if (key == "name") {
+                    name = value;
+                  } else if (key == "description") {
+                    description = value;
+                  } else if (key == "favorite") {
+                    favorite = value;
+                  } else if (key == "price") {
+                    price = value;
+                    categoryList.add(CategoryList(
+                        id: idProduct,
+                        name: name,
+                        description: description,
+                        favorite: favorite,
+                        price: price));
+                  }
+                });
+              }
+              CategoryAndProducts categoryAndProducts = CategoryAndProducts(
+                  id: idCategory,
+                  name: nameCategory,
+                  description: descriptionCategory,
+                  category: categoryList);
+
+              categories.add(categoryAndProducts);
             }
-            CategoryAndProducts categoryAndProducts = CategoryAndProducts(
-                id: idCategory,
-                name: nameCategory,
-                description: descriptionCategory,
-                category: categoryList);
+          });
+        } else {
+          String? error = '';
 
-            categories.add(categoryAndProducts);
-          }
-        });
-      } else {
-        String? error = '';
+          error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
 
-        error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
-
-        resp = error;
+          resp = error;
+        }
       }
-    }
 
-    resp = categories;
+      resp = categories;
+
+      isLoading = false;
+      notifyListeners();
+      return resp;
+    }
 
     isLoading = false;
     notifyListeners();

@@ -72,7 +72,7 @@ class _AdminProductsScreenState extends State<AdminProductsScreen> {
           },
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return MySlidable(
+              return MySlidable2(
                 id: products[index].id,
                 index: index,
                 tit: products[index].name,
@@ -100,8 +100,7 @@ class MySlidable2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final deleteCategoryService =
-        Provider.of<DeleteCategoryAndProductsServices>(context);
+    final deleteProductService = Provider.of<DeleteProductServices>(context);
     return Slidable(
 
         // Specify a key if the Slidable is dismissible.
@@ -125,13 +124,13 @@ class MySlidable2 extends StatelessWidget {
                   context: context,
                   type: CoolAlertType.warning,
                   title: 'Are you sure?',
-                  text: "Are you sure you want to delete this category?",
+                  text: "Are you sure you want to delete this product?",
                   showCancelBtn: true,
                   confirmBtnColor: Colors.red,
                   confirmBtnText: 'Delete',
                   onConfirmBtnTap: () {
-                    deleteCategoryService.deleteDeleteCategoryAndProducts(id);
-                    Navigator.pushReplacementNamed(context, 'adminCategories');
+                    deleteProductService.deleteDeleteProduct(id);
+                    Navigator.pushReplacementNamed(context, 'adminProducts');
                   },
                   onCancelBtnTap: () {
                     Navigator.pop(context);
@@ -142,15 +141,6 @@ class MySlidable2 extends StatelessWidget {
               foregroundColor: Colors.white,
               icon: Icons.delete,
               label: 'Delete',
-            ),
-            SlidableAction(
-              onPressed: (BuildContext context) {
-                Navigator.pushReplacementNamed(context, 'updateCategory');
-              },
-              backgroundColor: const Color(0xFF21B7CA),
-              foregroundColor: Colors.white,
-              icon: Icons.manage_accounts_rounded,
-              label: 'Edit',
             ),
           ],
         ),
@@ -163,12 +153,12 @@ class MySlidable2 extends StatelessWidget {
               visible: true,
               child: SlidableAction(
                 onPressed: (BuildContext context) {
-                  Navigator.pushReplacementNamed(context, 'insertProduct');
+                  Navigator.pushReplacementNamed(context, 'updateCategory');
                 },
-                backgroundColor: const Color(0xFF7BC043),
+                backgroundColor: const Color(0xFF21B7CA),
                 foregroundColor: Colors.white,
-                icon: Icons.check_outlined,
-                label: 'Insert Product',
+                icon: Icons.manage_accounts_rounded,
+                label: 'Edit',
               ),
             ),
           ],
