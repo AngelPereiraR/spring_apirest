@@ -103,7 +103,7 @@ class _LoginForm extends StatelessWidget {
                   labelText: 'Username',
                   labelStyle:
                       TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
-                  prefixIcon: Icon(Icons.alternate_email_rounded,
+                  prefixIcon: Icon(Icons.account_circle,
                       color: Color.fromARGB(255, 18, 201, 159)),
                   border: OutlineInputBorder(
                       borderSide:
@@ -164,7 +164,7 @@ class _LoginForm extends StatelessWidget {
                     final String? errorMessage = await loginService.postLogin(
                         loginForm.username, loginForm.password);
                     if (errorMessage == 'ROLE_ADMIN') {
-                      Navigator.pushNamed(context, 'index2');
+                      Navigator.pushNamed(context, 'adminCategories');
                     } else if (errorMessage == 'ROLE_USER') {
                       Navigator.pushNamed(context, 'productscreen');
                     } else {

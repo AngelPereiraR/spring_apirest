@@ -13,12 +13,18 @@ class GetCategoriesServices extends ChangeNotifier {
 
   List<CategoryAndProducts> categories = [];
 
+  bool isLoading = true;
+
   GetCategoriesServices();
 
   getCategories() async {
+    categories.clear();
     String? token = await LoginServices().readToken();
     var response = await Requests.get("http://$_baseUrl/api/categories",
         headers: {'Authorization': 'Bearer $token'});
+
+    isLoading = true;
+    notifyListeners();
 
     int idCategory = 0;
     String nameCategory = "";
@@ -32,53 +38,66 @@ class GetCategoriesServices extends ChangeNotifier {
     double price = 0;
 
     var resp;
-    final Map<String, dynamic> getProducts = json.decode(response.body);
-    if (getProducts.containsKey("id")) {
-      getProducts.forEach((key, value) {
-        if (key == "id") {
-          idCategory = value;
-        } else if (key == "name") {
-          nameCategory = value;
-        } else if (key == "description") {
-          descriptionCategory = value;
-        } else if (key == "categoryId") {
-          value.forEach((key, value) {
+    if (response.body.isNotEmpty) {
+      final List<dynamic> categoriesResponse = json.decode(response.body);
+      for (int i = 0; i < categoriesResponse.length; i++) {
+        if (categoriesResponse[i].containsKey("id")) {
+          categoriesResponse[i].forEach((key, value) {
             if (key == "id") {
-              idProduct = value;
+              idCategory = value;
             } else if (key == "name") {
-              name = value;
+              nameCategory = value;
             } else if (key == "description") {
-              description = value;
-            } else if (key == "favorite") {
-              favorite = value;
-            } else if (key == "price") {
-              price = value;
-              categoryList.add(CategoryList(
-                  id: idProduct,
-                  name: name,
-                  description: description,
-                  favorite: favorite,
-                  price: price));
+              descriptionCategory = value;
+            } else if (key == "categoryId") {
+              for (int j = 0; j < value.length; j++) {
+                value[j].forEach((key, value) {
+                  if (key == "id") {
+                    idProduct = value;
+                  } else if (key == "name") {
+                    name = value;
+                  } else if (key == "description") {
+                    description = value;
+                  } else if (key == "favorite") {
+                    favorite = value;
+                  } else if (key == "price") {
+                    price = value;
+                    categoryList.add(CategoryList(
+                        id: idProduct,
+                        name: name,
+                        description: description,
+                        favorite: favorite,
+                        price: price));
+                  }
+                });
+              }
+              CategoryAndProducts categoryAndProducts = CategoryAndProducts(
+                  id: idCategory,
+                  name: nameCategory,
+                  description: descriptionCategory,
+                  category: categoryList);
+
+              categories.add(categoryAndProducts);
             }
           });
-          CategoryAndProducts categoryAndProducts = CategoryAndProducts(
-              id: idCategory,
-              name: nameCategory,
-              description: descriptionCategory,
-              category: categoryList);
+        } else {
+          String? error = '';
 
-          categories.add(categoryAndProducts);
+          error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
+
+          resp = error;
         }
+      }
 
-        resp = categories;
-      });
-    } else {
-      String? error = '';
+      resp = categories;
 
-      error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
-
-      resp = error;
+      isLoading = false;
+      notifyListeners();
+      return resp;
     }
+
+    isLoading = false;
+    notifyListeners();
     return resp;
   }
 }

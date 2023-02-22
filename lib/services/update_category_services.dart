@@ -12,12 +12,13 @@ class UpdateCategoryServices extends ChangeNotifier {
 
   UpdateCategoryServices();
 
-  putUpdateCategory(int id, String name, String description) async {
+  putUpdateCategory(int? id, String name, String description) async {
     String? token = await LoginServices().readToken();
     var response = await Requests.put(
         "http://$_baseUrl/api/admin/categories/$id",
         body: {'id': id, 'name': name, 'description': description},
-        headers: {'Authorization': 'Bearer $token'});
+        headers: {'Authorization': 'Bearer $token'},
+        bodyEncoding: RequestBodyEncoding.JSON);
 
     var resp;
     final Map<String, dynamic> updateCategory = json.decode(response.body);

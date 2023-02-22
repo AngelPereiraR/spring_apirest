@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:spring_apirest/screens/insert_category_screen.dart';
 
 import '../models/models.dart';
 
+import '../screens/favorite_screen.dart';
 import '../screens/screens.dart';
 
 class AppRoutes {
@@ -25,8 +27,33 @@ class AppRoutes {
         icon: Icons.account_balance_outlined),
     MenuOption(
         route: 'productscreen',
-        name: 'Loading Screen',
+        name: 'Product Screen',
         screen: const ProductScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminCategories',
+        name: 'Admin Categories Screen',
+        screen: const AdminCategoriesScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'adminProducts',
+        name: 'Admin Products Screen',
+        screen: const AdminProductsScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'insertCategory',
+        name: 'Insert Category Screen',
+        screen: const InsertCategoryScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'updateCategory',
+        name: 'Update Category Screen',
+        screen: const UpdateCategoryScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'favoritescreen',
+        name: 'Favorite Screen',
+        screen: const FavoriteScreen(),
         icon: Icons.account_balance_outlined),
   ];
 

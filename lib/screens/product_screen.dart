@@ -47,20 +47,29 @@ class ProductScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, 'userscreen', (route) => false);
-          },
-          icon: const Icon(Icons.logout),
-        ),
-        title: const Text(
-          'Página de búsqueda',
-          style: TextStyle(fontSize: 24, color: Colors.black),
-        ));
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      leading: IconButton(
+        color: Colors.black,
+        onPressed: () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, 'userscreen', (route) => false);
+        },
+        icon: const Icon(Icons.logout),
+      ),
+      title: Row(
+        children: [
+          Spacer(),
+          IconButton(
+            color: Colors.black,
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, 'favoritescreen');
+            },
+            icon: const Icon(Icons.favorite),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -147,7 +156,7 @@ class listProducts1 extends StatefulWidget {
 class _listProductsState extends State<listProducts1> {
   List<Product> products = [];
   List<CategoryAndProducts> categories = [];
-  final productsService = GetProductsServices();
+  final productsService = GetProductsOfCompanyServices();
   final categoryService = GetCategoriesServices();
 
   Future refresh() async {
@@ -236,10 +245,7 @@ class _listProductsState extends State<listProducts1> {
                 child: IconButton(
                   color: Colors.black,
                   icon: const Icon(Icons.shopping_bag),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(
-                        context, 'shoppingcartscreen');
-                  },
+                  onPressed: () {},
                 ),
               ),
               const SizedBox(width: 8),

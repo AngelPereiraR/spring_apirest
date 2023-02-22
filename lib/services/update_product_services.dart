@@ -17,16 +17,17 @@ class UpdateProductServices extends ChangeNotifier {
       double price, bool favorite) async {
     String? token = await LoginServices().readToken();
     var response =
-        await Requests.post("http://$_baseUrl/api/admin/products/$id", body: {
-      'id': id,
-      'name': name,
-      'description': description,
-      'category': category,
-      'price': price,
-      'favorite': favorite
-    }, headers: {
-      'Authorization': 'Bearer $token'
-    });
+        await Requests.post("http://$_baseUrl/api/admin/products/$id",
+            body: {
+              'id': id,
+              'name': name,
+              'description': description,
+              'category': category,
+              'price': price,
+              'favorite': favorite
+            },
+            headers: {'Authorization': 'Bearer $token'},
+            bodyEncoding: RequestBodyEncoding.JSON);
 
     var resp;
     final Map<String, dynamic> updateProduct = json.decode(response.body);
