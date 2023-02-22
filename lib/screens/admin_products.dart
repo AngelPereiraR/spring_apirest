@@ -153,7 +153,8 @@ class MySlidable2 extends StatelessWidget {
               visible: true,
               child: SlidableAction(
                 onPressed: (BuildContext context) {
-                  Navigator.pushReplacementNamed(context, 'updateCategory');
+                  Navigator.pushReplacementNamed(context, 'updateProduct',
+                      arguments: id);
                 },
                 backgroundColor: const Color(0xFF21B7CA),
                 foregroundColor: Colors.white,
