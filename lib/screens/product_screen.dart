@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:like_button/like_button.dart';
 
 import 'package:provider/provider.dart';
+import 'package:spring_apirest/providers/company_form_provider.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
@@ -19,13 +20,12 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final articulosService = Provider.of<ArticulosServices>(context);
+    final productsService = Provider.of<GetProductsServices>(context);
 
-    return /*articulosService.isLoading
+    return productsService.isLoading
         ? const Center(
             child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
-        :*/
-        Scaffold(
+        : Scaffold(
             appBar: _appbar(context),
             body: SingleChildScrollView(
               child: Column(
@@ -145,31 +145,17 @@ class listProducts1 extends StatefulWidget {
 }
 
 class _listProductsState extends State<listProducts1> {
-  List<String> articulos = [];
-  @override
-  void initState() {
-    super.initState();
-    articulos.add('articulo');
-  }
-
-  /* final articulosService = ArticulosServices();
-
-  void updateList(String value) {
-    setState(() {
-      articulos = articulosService.articulos
-          .where((element) =>
-              element.tipo!.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
-  }
+  List<Product> products = [];
+  List<CategoryAndProducts> categories = [];
+  final productsService = GetProductsServices();
+  final categoryService = GetCategoriesServices();
 
   Future refresh() async {
-    setState(() => articulos.clear());
-
-    await articulosService.getArticulos();
+    setState(() => products.clear());
+    await categoryService.getCategories();
 
     setState(() {
-      articulos = articulosService.articulos;
+      categories = categoryService.categories;
     });
   }
 
@@ -178,236 +164,286 @@ class _listProductsState extends State<listProducts1> {
     super.initState();
     refresh();
   }
-*/
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsetsDirectional.only(
-                top: 20,
+    bool isSelected = false;
+    final companyForm = Provider.of<CompanyFormProvider>(context);
+    refreshProducts(int value) async {
+      products.clear();
+      await productsService.getGetProducts(value);
+      setState(() {
+        products = productsService.products;
+
+        // print(products.toString());
+
+        isSelected = true;
+      });
+    }
+
+    return Form(
+      key: companyForm.formKey,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsetsDirectional.only(
+                  top: 20,
+                ),
+                height: 30,
+                width: 200,
+                child: DropdownButtonFormField(
+                  hint: const Text(
+                    'Company',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  items: categories.map((e) {
+                    /// Ahora creamos "e" y contiene cada uno de los items de la lista.
+
+                    return DropdownMenuItem(
+                      value: e.id,
+                      child: Text(e.name.toString(),
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 18, 201, 159))),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    companyForm.id = value!;
+                  },
+                  validator: (value) {
+                    return (value != null && value != 0)
+                        ? null
+                        : 'Select Category';
+                  },
+                ),
               ),
-              height: 30,
-              width: 200,
-              child: TextField(
-                textInputAction: TextInputAction.search,
-                //    onChanged: ((value) => updateList(value)),
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  focusColor: Colors.black87,
-                  border: InputBorder.none,
-                  hintText: "Buscar",
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromARGB(255, 18, 201, 159))),
+                onPressed: () {
+                  setState(() {
+                    isSelected = true;
+                    refreshProducts(companyForm.id);
+                  });
+                },
+                child: const Text('Submit', style: TextStyle(fontSize: 18)),
+              ),
+              const Spacer(),
+              Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: IconButton(
+                  color: Colors.black,
+                  icon: const Icon(Icons.shopping_bag),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(
+                        context, 'shoppingcartscreen');
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+          Visibility(
+            visible: isSelected,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 600,
+                width: 400,
+                child: GridView.builder(
+                  itemBuilder: ((context, index) {
+                    TextEditingController customController =
+                        TextEditingController();
+
+                    return GestureDetector(
+                      /*  onTap: () {
+                        final articuloService =
+                            Provider.of<ArticuloService>(context, listen: false);
+                        setState(() {
+                          idArticulo = products[index].id!;
+                          articuloService.addVistaArticulo(idArticulo);
+              
+                          productsService.loadArticulo(idArticulo);
+                        });
+                        Navigator.pushReplacementNamed(context, 'productscreen');
+                      },*/
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: const EdgeInsets.all(8.0),
+                          width: 10,
+                          height: 330,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black54),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                              // ignore: prefer_const_literals_to_create_immutables
+                              boxShadow: [
+                                const BoxShadow(
+                                  color: Colors.black38,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 0),
+                                )
+                              ]),
+                          child: Column(
+                            children: [
+                              Stack(children: [
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.yellow,
+                                  ),
+                                  width: 300,
+                                  height: 200,
+                                  child: const ClipRRect(
+                                    child: FadeInImage(
+                                      placeholder:
+                                          AssetImage('assets/no-image.png'),
+                                      image: AssetImage('assets/no-image.png'),
+                                      width: 300,
+                                      height: 200,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  Text(products[index].name,
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              ),
+                              Row(
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  Text(products[index].description,
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                  const Spacer(),
+                                  Text('$products[index].price €',
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                height: 0.5,
+                                color: Colors.black54,
+                              ),
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    /*  onTap: () async {
+                                      final compraService =
+                                          Provider.of<CompraServices>(context,
+                                              listen: false);
+                                      final userService =
+                                          Provider.of<LoginServices>(context,
+                                              listen: false);
+                                      int userId =
+                                          int.parse(await userService.readId());
+              
+                                      String? msg = await compraService.addCompra(
+                                          userId, products[index].id!, 1);
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.warning,
+                                        title: msg,
+              
+                                        borderRadius: 30,
+                                        //loopAnimation: true,
+                                        confirmBtnColor: Colors.blueAccent,
+                                        confirmBtnText: 'Aceptar',
+              
+                                        onConfirmBtnTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                        showCancelBtn: true,
+                                        onCancelBtnTap: () {
+                                          Navigator.pop(context);
+                                        },
+                                      );
+                                    },*/
+                                    child: const Text(
+                                      'Compra \n Rapida',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  LikeButton(
+                                    likeBuilder: (bool isLiked) {
+                                      return Icon(
+                                        Icons.favorite,
+                                        color:
+                                            isLiked ? Colors.green : Colors.red,
+                                        size: 40,
+                                      );
+                                    },
+                                  )
+                                  /*IconButton(
+                                      onPressed: () async {
+                                          final compraService =
+                                            Provider.of<CompraServices>(context,
+                                                listen: false);
+                                        final userService =
+                                            Provider.of<LoginServices>(context,
+                                                listen: false);
+                                        int userId =
+                                            int.parse(await userService.readId());
+              
+                                        String? msg = await compraService.addCompra(
+                                            userId, products[index].id!, 1);
+                                        String msg = 'mensaje';
+                                        CoolAlert.show(
+                                          context: context,
+                                          type: CoolAlertType.warning,
+                                          title: msg,
+              
+                                          borderRadius: 30,
+                                          //loopAnimation: true,
+                                          confirmBtnColor: Colors.blueAccent,
+                                          confirmBtnText: 'Aceptar',
+              
+                                          onConfirmBtnTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          showCancelBtn: true,
+                                          onCancelBtnTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
+                                      icon: const Icon(Icons.add_shopping_cart))*/
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+                  itemCount: products.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 350,
+                      mainAxisSpacing: 30),
                 ),
               ),
             ),
-            const Spacer(),
-            Container(
-              margin: const EdgeInsets.only(top: 20),
-              child: IconButton(
-                color: Colors.black,
-                icon: const Icon(Icons.shopping_bag),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, 'shoppingcartscreen');
-                },
-              ),
-            ),
-            const SizedBox(width: 8),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 600,
-            width: 400,
-            child: GridView.builder(
-              itemBuilder: ((context, index) {
-                TextEditingController customController =
-                    TextEditingController();
-
-                return GestureDetector(
-                  /*  onTap: () {
-                    final articuloService =
-                        Provider.of<ArticuloService>(context, listen: false);
-                    setState(() {
-                      idArticulo = articulos[index].id!;
-                      articuloService.addVistaArticulo(idArticulo);
-
-                      articulosService.loadArticulo(idArticulo);
-                    });
-                    Navigator.pushReplacementNamed(context, 'productscreen');
-                  },*/
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      width: 10,
-                      height: 330,
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54),
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          // ignore: prefer_const_literals_to_create_immutables
-                          boxShadow: [
-                            const BoxShadow(
-                              color: Colors.black38,
-                              blurRadius: 5,
-                              offset: Offset(0, 0),
-                            )
-                          ]),
-                      child: Column(
-                        children: [
-                          Stack(children: [
-                            Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.yellow,
-                              ),
-                              width: 300,
-                              height: 200,
-                              child: const ClipRRect(
-                                child: FadeInImage(
-                                  placeholder:
-                                      AssetImage('assets/no-image.png'),
-                                  image: AssetImage('assets/no-image.png'),
-                                  width: 300,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ]),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Row(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              Text(articulos[index],
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold))
-                            ],
-                          ),
-                          Row(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              Text(articulos[index],
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                              const Spacer(),
-                              Text(articulos[index],
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Container(
-                            height: 0.5,
-                            color: Colors.black54,
-                          ),
-                          Row(
-                            children: [
-                              GestureDetector(
-                                /*  onTap: () async {
-                                  final compraService =
-                                      Provider.of<CompraServices>(context,
-                                          listen: false);
-                                  final userService =
-                                      Provider.of<LoginServices>(context,
-                                          listen: false);
-                                  int userId =
-                                      int.parse(await userService.readId());
-
-                                  String? msg = await compraService.addCompra(
-                                      userId, articulos[index].id!, 1);
-                                  CoolAlert.show(
-                                    context: context,
-                                    type: CoolAlertType.warning,
-                                    title: msg,
-
-                                    borderRadius: 30,
-                                    //loopAnimation: true,
-                                    confirmBtnColor: Colors.blueAccent,
-                                    confirmBtnText: 'Aceptar',
-
-                                    onConfirmBtnTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    showCancelBtn: true,
-                                    onCancelBtnTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },*/
-                                child: const Text(
-                                  'Compra \n Rapida',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              const Spacer(),
-                              LikeButton(
-                                likeBuilder: (bool isLiked) {
-                                  return Icon(
-                                    Icons.favorite,
-                                    color: isLiked ? Colors.green : Colors.red,
-                                    size: 40,
-                                  );
-                                },
-                              )
-                              /*IconButton(
-                                  onPressed: () async {
-                                      final compraService =
-                                        Provider.of<CompraServices>(context,
-                                            listen: false);
-                                    final userService =
-                                        Provider.of<LoginServices>(context,
-                                            listen: false);
-                                    int userId =
-                                        int.parse(await userService.readId());
-
-                                    String? msg = await compraService.addCompra(
-                                        userId, articulos[index].id!, 1);
-                                    String msg = 'mensaje';
-                                    CoolAlert.show(
-                                      context: context,
-                                      type: CoolAlertType.warning,
-                                      title: msg,
-
-                                      borderRadius: 30,
-                                      //loopAnimation: true,
-                                      confirmBtnColor: Colors.blueAccent,
-                                      confirmBtnText: 'Aceptar',
-
-                                      onConfirmBtnTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      showCancelBtn: true,
-                                      onCancelBtnTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  },
-                                  icon: const Icon(Icons.add_shopping_cart))*/
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              }),
-              itemCount: articulos.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, mainAxisExtent: 350, mainAxisSpacing: 30),
-            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

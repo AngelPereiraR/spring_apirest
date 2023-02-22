@@ -15,7 +15,7 @@ class GetCategoriesServices extends ChangeNotifier {
 
   GetCategoriesServices();
 
-  getCategories(int id) async {
+  getCategories() async {
     String? token = await LoginServices().readToken();
     var response = await Requests.get("http://$_baseUrl/api/categories",
         headers: {'Authorization': 'Bearer $token'});

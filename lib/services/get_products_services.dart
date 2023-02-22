@@ -11,6 +11,7 @@ class GetProductsServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
   final String _baseUrl = '192.168.247.68:8080';
   List<Product> products = [];
+  bool isLoading = true;
 
   GetProductsServices();
 
@@ -19,6 +20,8 @@ class GetProductsServices extends ChangeNotifier {
     var response = await Requests.get(
         "http://$_baseUrl/api/user/categories/$id/products",
         headers: {'Authorization': 'Bearer $token'});
+
+    isLoading = true;
 
     int idProduct = 0;
     String name = "";
@@ -56,6 +59,7 @@ class GetProductsServices extends ChangeNotifier {
 
       resp = error;
     }
+    isLoading = false;
     return resp;
   }
 }
