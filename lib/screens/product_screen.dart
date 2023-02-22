@@ -15,13 +15,35 @@ import '../services/services.dart';
 var _counter = 0;
 late int idArticulo = 0;
 
-class ProductScreen extends StatelessWidget {
+class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final productsService = Provider.of<GetProductsServices>(context);
+  State<ProductScreen> createState() => _ProductScreenState();
+}
 
+class _ProductScreenState extends State<ProductScreen> {
+  List<Product> products = [];
+  List<CategoryAndProducts> categories = [];
+  final productsService = GetProductsServices();
+
+  Future refresh() async {
+    setState(() => products.clear());
+    await productsService.getProducts();
+
+    setState(() {
+      products = productsService.products;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return productsService.isLoading
         ? const Center(
             child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
@@ -31,7 +53,6 @@ class ProductScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _dividerLine(),
                   Column(
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
@@ -176,17 +197,12 @@ class _listProductsState extends State<listProducts1> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSelected = false;
     final companyForm = Provider.of<CompanyFormProvider>(context);
     refreshProducts(int value) async {
       products.clear();
       await productsService.getGetProducts(value);
       setState(() {
         products = productsService.products;
-
-        // print(products.toString());
-
-        isSelected = true;
       });
     }
 
@@ -198,15 +214,12 @@ class _listProductsState extends State<listProducts1> {
             children: [
               Container(
                 margin: const EdgeInsetsDirectional.only(
+                  start: 40,
                   top: 20,
                 ),
                 height: 30,
                 width: 200,
                 child: DropdownButtonFormField(
-                  hint: const Text(
-                    'Company',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
                   items: categories.map((e) {
                     /// Ahora creamos "e" y contiene cada uno de los items de la lista.
 
@@ -233,26 +246,14 @@ class _listProductsState extends State<listProducts1> {
                         const Color.fromARGB(255, 18, 201, 159))),
                 onPressed: () {
                   setState(() {
-                    isSelected = true;
                     refreshProducts(companyForm.id);
                   });
                 },
                 child: const Text('Submit', style: TextStyle(fontSize: 18)),
               ),
-              const Spacer(),
-              Container(
-                margin: const EdgeInsets.only(top: 20),
-                child: IconButton(
-                  color: Colors.black,
-                  icon: const Icon(Icons.shopping_bag),
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(width: 8),
             ],
           ),
           Visibility(
-            visible: isSelected,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -334,10 +335,6 @@ class _listProductsState extends State<listProducts1> {
                                           fontSize: 15,
                                           fontWeight: FontWeight.bold)),
                                   const Spacer(),
-                                  Text('$products[index].price €',
-                                      style: const TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold)),
                                 ],
                               ),
                               const SizedBox(
@@ -388,6 +385,7 @@ class _listProductsState extends State<listProducts1> {
                                   ),
                                   const Spacer(),
                                   LikeButton(
+                                    isLiked: products[index].favorite,
                                     likeBuilder: (bool isLiked) {
                                       return Icon(
                                         Icons.favorite,
@@ -395,6 +393,54 @@ class _listProductsState extends State<listProducts1> {
                                             isLiked ? Colors.green : Colors.red,
                                         size: 40,
                                       );
+                                    },
+                                    onTap: (isLiked) async {
+                                      final updateProductService =
+                                          Provider.of<UpdateProductServices>(
+                                              context,
+                                              listen: false);
+
+                                      final getCategoryService = Provider.of<
+                                              GetCategoryAndProductsServices>(
+                                          context,
+                                          listen: false);
+
+                                      await getCategoryService
+                                          .getCategoryAndProducts(
+                                              companyForm.id);
+
+                                      CategoryAndProducts? category =
+                                          getCategoryService.category;
+
+                                      Map<String, dynamic> categoryMap = {
+                                        "id": category!.id,
+                                        "name": category.name,
+                                        "description": category.description,
+                                        "categoryId": []
+                                      };
+
+                                      if (isLiked == true) {
+                                        isLiked = false;
+                                        await updateProductService
+                                            .putUpdateProduct(
+                                                products[index].id,
+                                                products[index].name,
+                                                products[index].description,
+                                                categoryMap,
+                                                products[index].price,
+                                                false);
+                                      } else {
+                                        isLiked = true;
+                                        await updateProductService
+                                            .putUpdateProduct(
+                                                products[index].id,
+                                                products[index].name,
+                                                products[index].description,
+                                                categoryMap,
+                                                products[index].price,
+                                                true);
+                                      }
+                                      return isLiked;
                                     },
                                   )
                                   /*IconButton(

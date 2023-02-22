@@ -28,37 +28,38 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
 
     var resp;
     if (response.body.isNotEmpty) {
-      final Map<String, dynamic> getProducts = json.decode(response.body);
-      if (getProducts.containsKey("id")) {
-        getProducts.forEach((key, value) {
-          if (key == "id") {
-            idProduct = value;
-          } else if (key == "name") {
-            name = value;
-          } else if (key == "description") {
-            description = value;
-          } else if (key == "favorite") {
-            favorite = value;
-          } else if (key == "price") {
-            price = value;
-            products.add(Product(
-                id: idProduct,
-                name: name,
-                description: description,
-                favorite: favorite,
-                price: price));
-          }
-        });
-      } else {
-        String? error = '';
+      final List<dynamic> getProducts = json.decode(response.body);
+      for (int i = 0; i < getProducts.length; i++) {
+        if (getProducts[i].containsKey("id")) {
+          getProducts[i].forEach((key, value) {
+            if (key == "id") {
+              idProduct = value;
+            } else if (key == "name") {
+              name = value;
+            } else if (key == "description") {
+              description = value;
+            } else if (key == "favorite") {
+              favorite = value;
+            } else if (key == "price") {
+              price = value;
+              products.add(Product(
+                  id: idProduct,
+                  name: name,
+                  description: description,
+                  favorite: favorite,
+                  price: price));
+            }
+          });
+        } else {
+          String? error = '';
 
-        error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
+          error = 'ERROR TO GET ATTRIBUTES. CHECK ID';
 
-        resp = error;
+          resp = error;
+        }
       }
 
       resp = products;
-
       return resp;
     }
   }

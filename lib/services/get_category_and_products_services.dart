@@ -70,6 +70,12 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
                   description: descriptionCategory,
                   category: categoryList);
             }
+          } else if (key == "categoryId" && value.isEmpty) {
+            category = CategoryAndProducts(
+                id: idCategory,
+                name: nameCategory,
+                description: descriptionCategory,
+                category: categoryList);
           }
         });
       } else {

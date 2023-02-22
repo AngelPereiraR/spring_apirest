@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:spring_apirest/services/services.dart';
+import 'package:spring_apirest/providers/company_form_provider.dart';
 
 import 'router/app_routes.dart';
 
@@ -33,6 +34,8 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => InsertProductServices()),
       ChangeNotifierProvider(create: (_) => UpdateCategoryServices()),
       ChangeNotifierProvider(create: (_) => UpdateProductServices()),
+      ChangeNotifierProvider(create: (_) => UpdateProductServices()),
+      ChangeNotifierProvider(create: (_) => CompanyFormProvider()),
     ], child: const MyApp());
   }
 }

@@ -21,6 +21,7 @@ class InsertProductServices extends ChangeNotifier {
       double price,
       bool favorite) async {
     String? token = await LoginServices().readToken();
+
     var response = await Requests.post(
         "http://$_baseUrl/api/admin/categories/$idCategory/product",
         body: {
