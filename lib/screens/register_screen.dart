@@ -3,13 +3,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:cool_alert/cool_alert.dart';
-import '../models/models.dart';
 
 import '../providers/register_form_provider.dart';
 
 import '../services/services.dart';
 import '../widgets/widgets.dart';
-import '../screens/screens.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {

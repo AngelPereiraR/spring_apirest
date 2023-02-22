@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spring_apirest/screens/insert_category_screen.dart';
 
 import '../models/models.dart';
 
@@ -49,6 +48,16 @@ class AppRoutes {
         route: 'updateCategory',
         name: 'Update Category Screen',
         screen: const UpdateCategoryScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'insertProduct',
+        name: 'Insert Product Screen',
+        screen: const InsertProductScreen(),
+        icon: Icons.account_balance_outlined),
+    MenuOption(
+        route: 'updateProduct',
+        name: 'Update Product Screen',
+        screen: const UpdateProductScreen(),
         icon: Icons.account_balance_outlined),
     MenuOption(
         route: 'favoritescreen',

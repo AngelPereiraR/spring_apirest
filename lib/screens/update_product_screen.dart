@@ -3,21 +3,43 @@
 import 'package:flutter/material.dart';
 
 import 'package:cool_alert/cool_alert.dart';
+import '../models/models.dart';
 
-import '../providers/category_form_provider.dart';
+import '../providers/product_form_provider.dart';
 
 import '../services/services.dart';
 import '../widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class ScreenArguments {
+class ScreenArguments2 {
   final int id;
 
-  ScreenArguments(this.id);
+  ScreenArguments2(this.id);
 }
 
-class UpdateCategoryScreen extends StatelessWidget {
-  const UpdateCategoryScreen({Key? key}) : super(key: key);
+class UpdateProductScreen extends StatefulWidget {
+  const UpdateProductScreen({Key? key}) : super(key: key);
+
+  @override
+  State<UpdateProductScreen> createState() => _UpdateProductScreenState();
+}
+
+class _UpdateProductScreenState extends State<UpdateProductScreen> {
+  List<CategoryAndProducts> categories = [];
+  final categoriesService = GetCategoriesServices();
+  Future refresh() async {
+    setState(() => categories.clear());
+    await categoriesService.getCategories();
+    setState(() {
+      categories = categoriesService.categories;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +69,14 @@ class UpdateCategoryScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
-                      const Text('Update category',
+                      const Text('Update product',
                           style: TextStyle(
                               fontSize: 34,
                               color: Color.fromARGB(255, 18, 201, 159))),
                       const SizedBox(height: 10),
                       ChangeNotifierProvider(
-                        create: (_) => CategoryFormProvider(),
-                        child: _UpdateCategoryForm(),
+                        create: (_) => ProductFormProvider(),
+                        child: _UpdateProductForm(categories),
                       )
                     ],
                   ),
@@ -66,7 +88,7 @@ class UpdateCategoryScreen extends StatelessWidget {
             ),
             TextButton(
                 onPressed: () =>
-                    Navigator.pushReplacementNamed(context, 'adminCategories'),
+                    Navigator.pushReplacementNamed(context, 'adminProducts'),
                 style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(
                         Colors.indigo.withOpacity(0.1)),
@@ -84,20 +106,26 @@ class UpdateCategoryScreen extends StatelessWidget {
   }
 }
 
-class _UpdateCategoryForm extends StatelessWidget {
+class _UpdateProductForm extends StatelessWidget {
+  List<CategoryAndProducts> listOfCategories = [];
+  _UpdateProductForm(List<CategoryAndProducts> categories) {
+    listOfCategories = categories;
+  }
   @override
   Widget build(BuildContext context) {
     final int? args = ModalRoute.of(context)?.settings.arguments as int?;
-    final categoryForm = Provider.of<CategoryFormProvider>(context);
+    final productForm = Provider.of<ProductFormProvider>(context);
+    final categoryService =
+        Provider.of<GetCategoryAndProductsServices>(context);
     return Form(
-        key: categoryForm.formKey,
+        key: productForm.formKey,
         autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             TextFormField(
               autocorrect: false,
               decoration: const InputDecoration(
-                  hintText: 'Category name',
+                  hintText: 'Product name',
                   hintStyle:
                       TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
                   labelStyle:
@@ -117,18 +145,18 @@ class _UpdateCategoryForm extends StatelessWidget {
                   ),
                   prefixIcon: Icon(Icons.account_circle,
                       color: Color.fromARGB(255, 18, 201, 159))),
-              onChanged: (value) => categoryForm.name = value,
+              onChanged: (value) => productForm.name = value,
               validator: (value) {
                 return (value != null && value.isNotEmpty)
                     ? null
-                    : 'Please, enter the category name';
+                    : 'Please, enter the product name';
               },
             ),
             const SizedBox(height: 10),
             TextFormField(
               autocorrect: false,
               decoration: const InputDecoration(
-                  hintText: 'Category description',
+                  hintText: 'Product description',
                   labelText: 'Description',
                   hintStyle:
                       TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
@@ -148,11 +176,91 @@ class _UpdateCategoryForm extends StatelessWidget {
                   ),
                   prefixIcon: Icon(Icons.description,
                       color: Color.fromARGB(255, 18, 201, 159))),
-              onChanged: (value) => categoryForm.description = value,
+              onChanged: (value) => productForm.description = value,
               validator: (value) {
                 return (value != null && value.isNotEmpty)
                     ? null
-                    : 'Please, enter the category description';
+                    : 'Please, enter the product description';
+              },
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              child: DropdownButtonFormField(
+                decoration: const InputDecoration(
+                    hintText: 'Categories',
+                    labelText: 'Category',
+                    hintStyle:
+                        TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
+                    labelStyle:
+                        TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 18, 201, 159))),
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Color.fromARGB(255, 18, 201, 159))),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 18, 201, 159)),
+                    ),
+                    prefixIcon: Icon(Icons.auto_awesome_motion_sharp,
+                        color: Color.fromARGB(255, 18, 201, 159))),
+                items: listOfCategories.map((e) {
+                  /// Ahora creamos "e" y contiene cada uno de los items de la lista.
+                  return DropdownMenuItem(
+                    value: e.id,
+                    child: Text(e.name,
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 18, 201, 159))),
+                  );
+                }).toList(),
+                onChanged: (value) async {
+                  await categoryService.getCategoryAndProducts(value);
+                  productForm.category = {
+                    "id": categoryService.category!.id,
+                    "name": categoryService.category!.name,
+                    "description": categoryService.category!.description,
+                    "categoryId": [],
+                  };
+                },
+                validator: (value) {
+                  return (value != null && value != 0)
+                      ? null
+                      : 'Please, select a category';
+                },
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextFormField(
+              autocorrect: false,
+              decoration: const InputDecoration(
+                  hintText: 'Product price',
+                  labelText: 'Price',
+                  hintStyle:
+                      TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
+                  labelStyle:
+                      TextStyle(color: Color.fromARGB(255, 18, 201, 159)),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                  enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 18, 201, 159))),
+                  border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color.fromARGB(255, 18, 201, 159))),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Color.fromARGB(255, 18, 201, 159)),
+                  ),
+                  prefixIcon: Icon(Icons.price_check,
+                      color: Color.fromARGB(255, 18, 201, 159))),
+              onChanged: (value) => productForm.price = double.parse(value),
+              validator: (value) {
+                return (value != null && value.isNotEmpty)
+                    ? null
+                    : 'Please, enter the product price';
               },
             ),
             const SizedBox(height: 10),
@@ -167,17 +275,21 @@ class _UpdateCategoryForm extends StatelessWidget {
                 ),
                 onPressed: () async {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  final updateCategoryService =
-                      Provider.of<UpdateCategoryServices>(context,
+                  final updateProductService =
+                      Provider.of<UpdateProductServices>(context,
                           listen: false);
-                  if (categoryForm.isValidForm()) {
+                  if (productForm.isValidForm()) {
                     final String? errorMessage =
-                        await updateCategoryService.putUpdateCategory(
-                            args, categoryForm.name, categoryForm.description);
+                        await updateProductService.putUpdateProduct(
+                            args,
+                            productForm.name,
+                            productForm.description,
+                            productForm.category,
+                            productForm.price,
+                            productForm.favorite);
 
                     if (errorMessage == "OK") {
-                      Navigator.pushReplacementNamed(
-                          context, 'adminCategories');
+                      Navigator.pushReplacementNamed(context, 'adminProducts');
                     } else {
                       CoolAlert.show(
                         context: context,

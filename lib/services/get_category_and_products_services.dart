@@ -9,13 +9,13 @@ import 'package:spring_apirest/models/models.dart';
 
 class GetCategoryAndProductsServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.247.68:8080';
+  final String _baseUrl = '192.168.113.68:8080';
 
   CategoryAndProducts? category;
 
   GetCategoryAndProductsServices();
 
-  getCategoryAndProducts(int id) async {
+  getCategoryAndProducts(int? id) async {
     String? token = await LoginServices().readToken();
     var response = await Requests.get(
         "http://$_baseUrl/api/user/categories/$id",
@@ -43,31 +43,33 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
             nameCategory = value;
           } else if (key == "description") {
             descriptionCategory = value;
-          } else if (key == "categoryId") {
-            value.forEach((key, value) {
-              if (key == "id") {
-                idProduct = value;
-              } else if (key == "name") {
-                name = value;
-              } else if (key == "description") {
-                description = value;
-              } else if (key == "favorite") {
-                favorite = value;
-              } else if (key == "price") {
-                price = value;
-                categoryList.add(CategoryList(
-                    id: idProduct,
-                    name: name,
-                    description: description,
-                    favorite: favorite,
-                    price: price));
-              }
-            });
-            category = CategoryAndProducts(
-                id: idCategory,
-                name: nameCategory,
-                description: descriptionCategory,
-                category: categoryList);
+          } else if (key == "categoryId" && value.isNotEmpty) {
+            for (int i = 0; i < value.length; i++) {
+              value[i].forEach((key, value) {
+                if (key == "id") {
+                  idProduct = value;
+                } else if (key == "name") {
+                  name = value;
+                } else if (key == "description") {
+                  description = value;
+                } else if (key == "favorite") {
+                  favorite = value;
+                } else if (key == "price") {
+                  price = value;
+                  categoryList.add(CategoryList(
+                      id: idProduct,
+                      name: name,
+                      description: description,
+                      favorite: favorite,
+                      price: price));
+                }
+              });
+              category = CategoryAndProducts(
+                  id: idCategory,
+                  name: nameCategory,
+                  description: descriptionCategory,
+                  category: categoryList);
+            }
           }
         });
       } else {
