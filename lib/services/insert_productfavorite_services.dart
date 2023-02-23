@@ -12,8 +12,14 @@ class InsertProductFavoriteServices extends ChangeNotifier {
 
   InsertProductFavoriteServices();
 
-  postInsertProductFavorite(int idCategory, int idProduct, String name,
-      String description, double price, bool favorite) async {
+  postInsertProductFavorite(
+      int idCategory,
+      int idProduct,
+      String name,
+      Map<String, dynamic>? category,
+      String description,
+      double price,
+      bool favorite) async {
     String? token = await LoginServices().readToken();
     var response = await Requests.post(
         "http://$_baseUrl/api/admin/categories/$idCategory/product/favorite",
@@ -21,6 +27,7 @@ class InsertProductFavoriteServices extends ChangeNotifier {
           'id': idProduct,
           'name': name,
           'description': description,
+          'category': category,
           'price': price,
           'favorite': favorite
         },

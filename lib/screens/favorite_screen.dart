@@ -15,13 +15,35 @@ import '../services/services.dart';
 var _counter = 0;
 late int idArticulo = 0;
 
-class FavoriteScreen extends StatelessWidget {
+class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final productsService = Provider.of<GetProductsServices>(context);
+  State<FavoriteScreen> createState() => _FavoriteScreenState();
+}
 
+class _FavoriteScreenState extends State<FavoriteScreen> {
+  List<Product> products = [];
+  List<CategoryAndProducts> categories = [];
+  final productsService = GetProductsServices();
+
+  Future refresh() async {
+    setState(() => products.clear());
+    await productsService.getProducts();
+
+    setState(() {
+      products = productsService.products;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return productsService.isLoading
         ? const Center(
             child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
@@ -244,11 +266,6 @@ class _listProductsState extends State<_listProducts1> {
                                   style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold)),
-                              const Spacer(),
-                              Text('$products[index].price €',
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(
@@ -299,6 +316,7 @@ class _listProductsState extends State<_listProducts1> {
                               ),
                               const Spacer(),
                               LikeButton(
+                                isLiked: products[index].favorite,
                                 likeBuilder: (bool isLiked) {
                                   return Icon(
                                     Icons.favorite,

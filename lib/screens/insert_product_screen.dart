@@ -204,7 +204,7 @@ class _InsertProductForm extends StatelessWidget {
                   /// Ahora creamos "e" y contiene cada uno de los items de la lista.
                   return DropdownMenuItem(
                     value: e.id,
-                    child: Text(e.name,
+                    child: Text(e.name.toString(),
                         style: const TextStyle(
                             color: Color.fromARGB(255, 18, 201, 159))),
                   );
@@ -274,7 +274,7 @@ class _InsertProductForm extends StatelessWidget {
                   if (productForm.isValidForm()) {
                     final String? errorMessage =
                         await insertProductService.postInsertProduct(
-                            productForm.category?.values.toList().first,
+                            productForm.category!.values.toList().first,
                             1,
                             productForm.name,
                             productForm.description,

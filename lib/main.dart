@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:spring_apirest/services/services.dart';
+import 'package:spring_apirest/providers/company_form_provider.dart';
 
 import 'router/app_routes.dart';
+import 'services/insert_productfavorite_services.dart';
 
 void main() => runApp(const AppState());
 
@@ -31,8 +33,11 @@ class AppState extends StatelessWidget {
       ChangeNotifierProvider(create: (_) => GetProductsServices()),
       ChangeNotifierProvider(create: (_) => InsertCategoryServices()),
       ChangeNotifierProvider(create: (_) => InsertProductServices()),
+      ChangeNotifierProvider(create: (_) => InsertProductFavoriteServices()),
       ChangeNotifierProvider(create: (_) => UpdateCategoryServices()),
       ChangeNotifierProvider(create: (_) => UpdateProductServices()),
+      ChangeNotifierProvider(create: (_) => UpdateProductServices()),
+      ChangeNotifierProvider(create: (_) => CompanyFormProvider()),
     ], child: const MyApp());
   }
 }
