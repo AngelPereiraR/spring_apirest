@@ -8,6 +8,7 @@ import 'package:like_button/like_button.dart';
 
 import 'package:provider/provider.dart';
 import 'package:spring_apirest/providers/company_form_provider.dart';
+import 'package:spring_apirest/services/insert_productfavorite_services.dart';
 
 import '../models/models.dart';
 import '../services/services.dart';
@@ -20,9 +21,9 @@ class ProductScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final productsService = Provider.of<GetProductsServices>(context);
+    final productsCompanyService = Provider.of<GetProductsServices>(context);
 
-    return productsService.isLoading
+    return productsCompanyService.isLoading
         ? const Center(
             child: SpinKitWave(color: Color.fromRGBO(0, 153, 153, 1), size: 50))
         : Scaffold(
@@ -156,15 +157,16 @@ class listProducts1 extends StatefulWidget {
 class _listProductsState extends State<listProducts1> {
   List<Product> products = [];
   List<CategoryAndProducts> categories = [];
-  final productsService = GetProductsOfCompanyServices();
+  final productsCompanyService = GetProductsOfCompanyServices();
   final categoryService = GetCategoriesServices();
-
+  final productsService = GetProductsServices();
   Future refresh() async {
     setState(() => products.clear());
     await categoryService.getCategories();
-
+    await productsService.getProducts();
     setState(() {
       categories = categoryService.categories;
+      products = productsService.products;
     });
   }
 
@@ -180,9 +182,9 @@ class _listProductsState extends State<listProducts1> {
     final companyForm = Provider.of<CompanyFormProvider>(context);
     refreshProducts(int value) async {
       products.clear();
-      await productsService.getGetProducts(value);
+      await productsCompanyService.getGetProducts(value);
       setState(() {
-        products = productsService.products;
+        products = productsCompanyService.products;
 
         // print(products.toString());
 
@@ -271,7 +273,7 @@ class _listProductsState extends State<listProducts1> {
                           idArticulo = products[index].id!;
                           articuloService.addVistaArticulo(idArticulo);
               
-                          productsService.loadArticulo(idArticulo);
+                          productsCompanyService.loadArticulo(idArticulo);
                         });
                         Navigator.pushReplacementNamed(context, 'productscreen');
                       },*/
@@ -388,6 +390,21 @@ class _listProductsState extends State<listProducts1> {
                                   ),
                                   const Spacer(),
                                   LikeButton(
+                                    onTap: ((isLiked) async {
+                                      final insertProductService = Provider.of<
+                                              InsertProductFavoriteServices>(
+                                          context,
+                                          listen: false);
+
+                                      return await insertProductService
+                                          .postInsertProductFavorite(
+                                              companyForm.id,
+                                              products[index].id,
+                                              products[index].name,
+                                              products[index].description,
+                                              products[index].price,
+                                              products[index].favorite);
+                                    }),
                                     likeBuilder: (bool isLiked) {
                                       return Icon(
                                         Icons.favorite,
