@@ -8,12 +8,12 @@ import 'package:spring_apirest/services/services.dart';
 
 class UpdateProductServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
 
   UpdateProductServices();
 
   putUpdateProduct(int? id, String name, String description,
-      Map<String, dynamic>? category, double price, bool favorite) async {
+      Map<String, dynamic>? category, double price) async {
     String? token = await LoginServices().readToken();
     var response = await Requests.put("http://$_baseUrl/api/admin/products/$id",
         body: {
@@ -21,8 +21,7 @@ class UpdateProductServices extends ChangeNotifier {
           'name': name,
           'description': description,
           'category': category,
-          'price': price,
-          'favorite': favorite
+          'price': price
         },
         headers: {'Authorization': 'Bearer $token'},
         bodyEncoding: RequestBodyEncoding.JSON);

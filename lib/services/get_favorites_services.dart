@@ -9,7 +9,7 @@ import 'package:spring_apirest/models/models.dart';
 
 class GetFavoritesServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
   List<Product> products = [];
 
   GetFavoritesServices();
@@ -23,7 +23,6 @@ class GetFavoritesServices extends ChangeNotifier {
     int idProduct = 0;
     String name = "";
     String description = "";
-    bool favorite = false;
     double price = 0;
 
     var resp;
@@ -38,15 +37,12 @@ class GetFavoritesServices extends ChangeNotifier {
               name = value;
             } else if (key == "description") {
               description = value;
-            } else if (key == "favorite") {
-              favorite = value;
             } else if (key == "price") {
               price = value;
               products.add(Product(
                   id: idProduct,
                   name: name,
                   description: description,
-                  favorite: favorite,
                   price: price));
             }
           });

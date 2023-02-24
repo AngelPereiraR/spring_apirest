@@ -277,46 +277,8 @@ class _listProductsState extends State<_listProducts1> {
                           ),
                           Row(
                             children: [
-                              GestureDetector(
-                                /*  onTap: () async {
-                                  final compraService =
-                                      Provider.of<CompraServices>(context,
-                                          listen: false);
-                                  final userService =
-                                      Provider.of<LoginServices>(context,
-                                          listen: false);
-                                  int userId =
-                                      int.parse(await userService.readId());
-          
-                                  String? msg = await compraService.addCompra(
-                                      userId, products[index].id!, 1);
-                                  CoolAlert.show(
-                                    context: context,
-                                    type: CoolAlertType.warning,
-                                    title: msg,
-          
-                                    borderRadius: 30,
-                                    //loopAnimation: true,
-                                    confirmBtnColor: Colors.blueAccent,
-                                    confirmBtnText: 'Aceptar',
-          
-                                    onConfirmBtnTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    showCancelBtn: true,
-                                    onCancelBtnTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },*/
-                                child: const Text(
-                                  'Compra \n Rapida',
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              const Spacer(),
                               LikeButton(
-                                isLiked: products[index].favorite,
+                                isLiked: true,
                                 likeBuilder: (bool isLiked) {
                                   return Icon(
                                     Icons.favorite,

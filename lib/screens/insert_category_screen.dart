@@ -166,7 +166,7 @@ class _InsertCategoryForm extends StatelessWidget {
                   if (categoryForm.isValidForm()) {
                     final String? errorMessage =
                         await insertCategoryService.postInsertCategory(
-                            1, categoryForm.name, categoryForm.description);
+                            categoryForm.name, categoryForm.description);
 
                     if (errorMessage == "OK") {
                       Navigator.pushReplacementNamed(

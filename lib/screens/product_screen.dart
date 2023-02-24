@@ -205,10 +205,6 @@ class _listProductsState extends State<listProducts1> {
       await productsCompanyService.getGetProducts(value);
       setState(() {
         products = productsCompanyService.products;
-
-        // print(products.toString());
-
-        products = productsService.products;
       });
     }
 
@@ -262,14 +258,11 @@ class _listProductsState extends State<listProducts1> {
           Visibility(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Container(
+              child: SizedBox(
                 height: 600,
                 width: 400,
                 child: GridView.builder(
                   itemBuilder: ((context, index) {
-                    TextEditingController customController =
-                        TextEditingController();
-
                     return GestureDetector(
                       /*  onTap: () {
                         final articuloService =
@@ -352,44 +345,6 @@ class _listProductsState extends State<listProducts1> {
                               ),
                               Row(
                                 children: [
-                                  GestureDetector(
-                                    /*  onTap: () async {
-                                      final compraService =
-                                          Provider.of<CompraServices>(context,
-                                              listen: false);
-                                      final userService =
-                                          Provider.of<LoginServices>(context,
-                                              listen: false);
-                                      int userId =
-                                          int.parse(await userService.readId());
-              
-                                      String? msg = await compraService.addCompra(
-                                          userId, products[index].id!, 1);
-                                      CoolAlert.show(
-                                        context: context,
-                                        type: CoolAlertType.warning,
-                                        title: msg,
-              
-                                        borderRadius: 30,
-                                        //loopAnimation: true,
-                                        confirmBtnColor: Colors.blueAccent,
-                                        confirmBtnText: 'Aceptar',
-              
-                                        onConfirmBtnTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                        showCancelBtn: true,
-                                        onCancelBtnTap: () {
-                                          Navigator.pop(context);
-                                        },
-                                      );
-                                    },*/
-                                    child: const Text(
-                                      'Compra \n Rapida',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  ),
-                                  const Spacer(),
                                   LikeButton(
                                     onTap: ((isLiked) async {
                                       final getCategoryAndProductsServices =
@@ -397,37 +352,38 @@ class _listProductsState extends State<listProducts1> {
                                                   GetCategoryAndProductsServices>(
                                               context,
                                               listen: false);
-                                      await GetCategoryAndProductsServices()
+                                      await getCategoryAndProductsServices
                                           .getCategoryAndProducts(
                                               companyForm.id);
                                       CategoryAndProducts? category =
                                           getCategoryAndProductsServices
                                               .category;
+                                      if (category != null) {
+                                        Map<String, dynamic> categoryMap = {
+                                          "id": category.id,
+                                          "name": category.name,
+                                          "description": category.description
+                                        };
 
-                                      Map<String, dynamic> categoryMap = {
-                                        "id": category!.id,
-                                        "name": category.name,
-                                        "description": category.description,
-                                        "categoryId": []
-                                      };
+                                        // ignore: use_build_context_synchronously
+                                        final insertProductService = Provider
+                                            .of<InsertProductFavoriteServices>(
+                                                context,
+                                                listen: false);
 
-                                      // ignore: use_build_context_synchronously
-                                      final insertProductService = Provider.of<
-                                              InsertProductFavoriteServices>(
-                                          context,
-                                          listen: false);
+                                        await insertProductService
+                                            .postInsertProductFavorite(
+                                                companyForm.id,
+                                                products[index].id,
+                                                products[index].name,
+                                                categoryMap,
+                                                products[index].description,
+                                                products[index].price);
 
-                                      return await insertProductService
-                                          .postInsertProductFavorite(
-                                              companyForm.id,
-                                              products[index].id,
-                                              products[index].name,
-                                              categoryMap,
-                                              products[index].description,
-                                              products[index].price,
-                                              products[index].favorite);
+                                        return true;
+                                      }
                                     }),
-                                    isLiked: products[index].favorite,
+                                    isLiked: false,
                                     likeBuilder: (bool isLiked) {
                                       return Icon(
                                         Icons.favorite,

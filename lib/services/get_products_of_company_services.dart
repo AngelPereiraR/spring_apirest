@@ -9,12 +9,13 @@ import 'package:spring_apirest/models/models.dart';
 
 class GetProductsOfCompanyServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
   List<Product> products = [];
 
   GetProductsOfCompanyServices();
 
   getGetProducts(int id) async {
+    products.clear();
     String? token = await LoginServices().readToken();
     var response = await Requests.get(
         "http://$_baseUrl/api/user/categories/$id/products",
@@ -23,7 +24,6 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
     int idProduct = 0;
     String name = "";
     String description = "";
-    bool favorite = false;
     double price = 0;
 
     var resp;
@@ -38,15 +38,12 @@ class GetProductsOfCompanyServices extends ChangeNotifier {
               name = value;
             } else if (key == "description") {
               description = value;
-            } else if (key == "favorite") {
-              favorite = value;
             } else if (key == "price") {
               price = value;
               products.add(Product(
                   id: idProduct,
                   name: name,
                   description: description,
-                  favorite: favorite,
                   price: price));
             }
           });

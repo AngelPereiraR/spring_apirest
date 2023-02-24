@@ -8,15 +8,14 @@ import 'package:spring_apirest/services/services.dart';
 
 class InsertCategoryServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
 
   InsertCategoryServices();
 
-  postInsertCategory(int id, String name, String description) async {
+  postInsertCategory(String name, String description) async {
     String? token = await LoginServices().readToken();
-    var response = await Requests.post(
-        "http://$_baseUrl/api/admin/categories/$id",
-        body: {'id': id, 'name': name, 'description': description},
+    var response = await Requests.post("http://$_baseUrl/api/admin/categories",
+        body: {'name': name, 'description': description},
         headers: {'Authorization': 'Bearer $token'},
         bodyEncoding: RequestBodyEncoding.JSON);
 

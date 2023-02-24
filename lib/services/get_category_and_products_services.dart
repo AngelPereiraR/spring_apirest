@@ -9,7 +9,7 @@ import 'package:spring_apirest/models/models.dart';
 
 class GetCategoryAndProductsServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
 
   CategoryAndProducts? category;
 
@@ -29,7 +29,6 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
     int idProduct = 0;
     String name = "";
     String description = "";
-    bool favorite = false;
     double price = 0;
 
     var resp;
@@ -52,15 +51,12 @@ class GetCategoryAndProductsServices extends ChangeNotifier {
                   name = value;
                 } else if (key == "description") {
                   description = value;
-                } else if (key == "favorite") {
-                  favorite = value;
                 } else if (key == "price") {
                   price = value;
                   categoryList.add(CategoryList(
                       id: idProduct,
                       name: name,
                       description: description,
-                      favorite: favorite,
                       price: price));
                 }
               });

@@ -221,8 +221,7 @@ class _UpdateProductForm extends StatelessWidget {
                   productForm.category = {
                     "id": categoryService.category!.id,
                     "name": categoryService.category!.name,
-                    "description": categoryService.category!.description,
-                    "categoryId": [],
+                    "description": categoryService.category!.description
                   };
                 },
                 validator: (value) {
@@ -285,8 +284,7 @@ class _UpdateProductForm extends StatelessWidget {
                             productForm.name,
                             productForm.description,
                             productForm.category,
-                            productForm.price,
-                            productForm.favorite);
+                            productForm.price);
 
                     if (errorMessage == "OK") {
                       Navigator.pushReplacementNamed(context, 'adminProducts');

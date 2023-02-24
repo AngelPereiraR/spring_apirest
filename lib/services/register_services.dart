@@ -6,15 +6,15 @@ import 'package:requests/requests.dart';
 
 class RegisterServices extends ChangeNotifier {
   //Cambiar la IP por la conexión que tenga cada uno
-  final String _baseUrl = '192.168.113.68:8080';
+  final String _baseUrl = '192.168.164.68:8080';
 
   final storage = const FlutterSecureStorage();
 
   RegisterServices();
 
-  postRegister(String username, String password, String role) async {
+  postRegister(String username, String password) async {
     var response = await Requests.post("http://$_baseUrl/register",
-        body: {'username': username, 'password': password, 'role': role},
+        body: {'username': username, 'password': password},
         bodyEncoding: RequestBodyEncoding.JSON);
 
     String resp = '';

@@ -35,14 +35,12 @@ class CategoryList {
     required this.id,
     required this.name,
     required this.description,
-    required this.favorite,
     required this.price,
   });
 
   int id;
   String name;
   String description;
-  bool favorite;
   double price;
 
   factory CategoryList.fromJson(String str) =>
@@ -52,7 +50,6 @@ class CategoryList {
         id: json["id"],
         name: json["name"],
         description: json["description"],
-        favorite: json["favorite"],
         price: json["price"],
       );
 }

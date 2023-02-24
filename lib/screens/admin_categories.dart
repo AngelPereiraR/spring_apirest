@@ -167,18 +167,6 @@ class MySlidable extends StatelessWidget {
             Visibility(
               visible: true,
               child: SlidableAction(
-                onPressed: (BuildContext context) {
-                  Navigator.pushReplacementNamed(context, 'insertProduct');
-                },
-                backgroundColor: const Color(0xFF7BC043),
-                foregroundColor: Colors.white,
-                icon: Icons.add_shopping_cart,
-                label: 'Product',
-              ),
-            ),
-            Visibility(
-              visible: true,
-              child: SlidableAction(
                 onPressed: (BuildContext _) async {
                   await CoolAlert.show(
                     context: context,

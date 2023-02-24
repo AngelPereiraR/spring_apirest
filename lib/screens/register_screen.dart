@@ -166,9 +166,7 @@ class _RegisterForm extends StatelessWidget {
                   if (registerForm.isValidForm()) {
                     final String? errorMessage =
                         await registerService.postRegister(
-                            registerForm.username,
-                            registerForm.password,
-                            "ROLE_USER");
+                            registerForm.username, registerForm.password);
 
                     if (errorMessage == "") {
                       RegisterServices().logout();

@@ -214,8 +214,7 @@ class _InsertProductForm extends StatelessWidget {
                   productForm.category = {
                     "id": categoryService.category!.id,
                     "name": categoryService.category!.name,
-                    "description": categoryService.category!.description,
-                    "categoryId": [],
+                    "description": categoryService.category!.description
                   };
                 },
                 validator: (value) {
@@ -275,7 +274,6 @@ class _InsertProductForm extends StatelessWidget {
                     final String? errorMessage =
                         await insertProductService.postInsertProduct(
                             productForm.category!.values.toList().first,
-                            1,
                             productForm.name,
                             productForm.description,
                             productForm.category,

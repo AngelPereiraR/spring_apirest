@@ -8,7 +8,6 @@ class ProductFormProvider extends ChangeNotifier {
   String name = '';
   String description = '';
   Map<String, dynamic>? category = {};
-  bool favorite = false;
   double price = 0.0;
 
   bool isValidForm() {
